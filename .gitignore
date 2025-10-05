@@ -1,0 +1,89 @@
+# -----------------------------
+# Python
+# -----------------------------
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+*.pyo
+*.pyc
+*.pyd
+*.python-version
+
+# Entornos virtuales
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# -----------------------------
+# Django
+# -----------------------------
+*.log
+*.pot
+*.pyc
+*.pyo
+*.pyd
+*.db
+*.sqlite3
+db.sqlite3
+db.sqlite3-journal
+
+# Static / Media
+staticfiles/
+media/
+*.sass-cache/
+*.cache/
+*.DS_Store
+
+# Settings locales
+local_settings.py
+settings_local.py
+
+# -----------------------------
+# VSCode / IDEs
+# -----------------------------
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# -----------------------------
+# Excel / Pandas / archivos temporales
+# -----------------------------
+*.xlsx
+*.xls
+*.xlsm
+*.xlsb
+*.csv
+*.ods
+*.tmp
+
+# -----------------------------
+# Deploy / Render
+# -----------------------------
+*.log
+*.bak
+*.swp
+*.lock
+
+# -----------------------------
+# Python packaging / wheel
+# -----------------------------
+*.egg-info/
+dist/
+build/
+.eggs/
+*.egg
+*.manifest
+*.spec
+
+# -----------------------------
+# S3 / AWS / credenciales
+# -----------------------------
+*.pem
+*.key
+*.env
+aws_credentials.json

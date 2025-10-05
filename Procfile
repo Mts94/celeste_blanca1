@@ -1,0 +1,1 @@
+web: gunicorn Celesteyblanca.wsgi:application --preload
