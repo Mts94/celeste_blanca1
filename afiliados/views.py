@@ -19,18 +19,22 @@ def lista_afiliados(request):
     numero_afiliado = request.GET.get("numero_afiliado", "")
     sector = request.GET.get("sector", "")
     ocultar_hechos = request.GET.get("ocultar_hechos", "")
-    localidad = request.GET.get("localidad", "")  # 🔹 nuevo filtro
-    
+
     if q:
-        afiliados = afiliados.filter(nombre__icontains=q)
+        afiliados = afiliados.filter(
+            Q(apellido_nombre__icontains=q)
+            | Q(dni__icontains=q)
+            | Q(direccion__icontains=q)
+        )
+
     if numero_afiliado:
         afiliados = afiliados.filter(numero_afiliado__icontains=numero_afiliado)
-    if zona:
-        afiliados = afiliados.filter(zona__icontains=zona)
-    if localidad:
-        afiliados = afiliados.filter(localidad__icontains=localidad)  # 🔹 filtra por localidad
 
-    
+    if sector:
+        afiliados = afiliados.filter(sector__icontains=sector)
+
+    if ocultar_hechos:
+        afiliados = afiliados.filter(hecho=False)
 
     # exportar solo lo filtrado
     if "exportar" in request.GET:
@@ -39,7 +43,7 @@ def lista_afiliados(request):
         ws.title = "Afiliados"
 
         # encabezados
-        ws.append(["Nombre", "DNI", "Número Afiliado", "Zona", "Hecho","localidad"])
+        ws.append(["Nombre", "DNI", "Número Afiliado", "Zona", "Hecho"])
 
         # solo los registros filtrados
         for a in afiliados:
@@ -50,7 +54,6 @@ def lista_afiliados(request):
                     a.numero_afiliado,
                     a.sector,
                     "Sí" if a.hecho else "No",
-                    a.localidad,
                 ]
             )
 
@@ -131,7 +134,6 @@ def exportar_excel(request):
     query = request.GET.get("q", "")
     numero_afiliado = request.GET.get("numero_afiliado", "")
     sector = request.GET.get("sector", "")
-    localidad = request.GET.get("localidad", "")  # 🔹 nuevo filtro
 
     afiliados = Afiliado.objects.all()
 
@@ -143,8 +145,6 @@ def exportar_excel(request):
         afiliados = afiliados.filter(numero_afiliado__icontains=numero_afiliado)
     if sector:
         afiliados = afiliados.filter(sector__icontains=sector)
-    if localidad:
-        afiliados = afiliados.filter(localidad__icontains=localidad)
 
     # --- Exportación ---
     wb = openpyxl.Workbook()

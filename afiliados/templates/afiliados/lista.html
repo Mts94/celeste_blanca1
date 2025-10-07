@@ -39,7 +39,9 @@
         <option value="Este" {% if sector_seleccionado == 'Este' %}selected{% endif %}>Este</option>
         <option value="Oeste" {% if sector_seleccionado == 'Oeste' %}selected{% endif %}>Oeste</option>
     </select>
-  </div>
+    <div>
+        <input type="text" name="localidad" class="form-control" placeholder="Localidad" value="{{ filtros.localidad }}">
+    </div>
     <div class="form-check me-2">
         <input class="form-check-input" type="checkbox" name="ocultar_hechos" value="1"
                id="ocultar_hechos" {% if request.GET.ocultar_hechos %}checked{% endif %}>
@@ -47,7 +49,6 @@
             Ocultar hechos
         </label>
     </div>
-    <input type="text" name="localidad" placeholder="Localidad" value="{{ request.GET.localidad }}">  <!-- 🔹 nuevo -->
   <div class="col">
     <button type="submit" class="btn btn-primary">Filtrar</button>
   </div>
