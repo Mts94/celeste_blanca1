@@ -1,22 +1,23 @@
 import os
 from pathlib import Path
-import dj_database_url
 from django.core.management.utils import get_random_secret_key
+from decouple import config
+
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Clave secreta (usa la de Render si está definida, si no genera una local)
-SECRET_KEY = os.environ.get("SECRET_KEY", get_random_secret_key())
+SECRET_KEY = config('SECRET_KEY', default=get_random_secret_key())
 
 # Render setea la variable RENDER en producción
-DEBUG = 'RENDER' not in os.environ
 
-ALLOWED_HOSTS = ['localhost']
 
-# Si estás en Render, agrega el host
-RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
-if RENDER_EXTERNAL_HOSTNAME:
-    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
+DEBUG = config('DEBUG', cast=bool)
+
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+
+
+
 
 # Aplicaciones instaladas
 INSTALLED_APPS = [
@@ -28,10 +29,12 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # tus apps:
     'afiliados',
+    'widget_tweaks',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -63,11 +66,14 @@ WSGI_APPLICATION = 'celesteyblanca.wsgi.application'
 
 # Base de datos con psycopg3 (Render te da DATABASE_URL automáticamente)
 DATABASES = {
-    'default': dj_database_url.config(
-        default=os.environ.get("DATABASE_URL"),
-        conn_max_age=600,
-        engine="django.db.backends.postgresql"
-    )
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': config('DB_NAME'),
+        'USER': config('DB_USER'),
+        'PASSWORD': config('DB_PASSWORD'),
+        'HOST': config('DB_HOST'),
+        'PORT': config('DB_PORT', cast=int),
+    }
 }
 
 # Archivos estáticos
@@ -79,6 +85,15 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / "media"
 
+STATIC_URL = '/static/'
+
+if not DEBUG:
+    # Tell Django to copy static assets into a path called `staticfiles` (this is specific to Render)
+    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+    # Enable the WhiteNoise storage backend, which compresses static files to reduce disk use
+    # and renames the files with unique names for each version to support long-term caching
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 # Configuración por defecto de Django
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -101,3 +116,4 @@ USE_I18N = True
 USE_TZ = True
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+LOGIN_REDIRECT_URL = 'lista_afiliados'

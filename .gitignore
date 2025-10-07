@@ -85,5 +85,5 @@ build/
 # -----------------------------
 *.pem
 *.key
-*.env
+.env
 aws_credentials.json

@@ -1,14 +1,12 @@
 #!/usr/bin/env bash
-# Termina si hay algún error
-set -o errexit  
+# Exit on error
+set -o errexit
 
-echo "🚀 Instalando dependencias..."
+# Modify this line as needed for your package manager (pip, poetry, etc.)
 pip install -r requirements.txt
 
-echo "📦 Aplicando migraciones..."
-python manage.py migrate --noinput
+# Convert static asset files
+python manage.py collectstatic --no-input
 
-echo "🗂️ Recolectando static files..."
-python manage.py collectstatic --noinput
-
-echo "✅ Build finalizado correctamente."
+# Apply any outstanding database migrations
+python manage.py migrate
