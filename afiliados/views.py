@@ -18,6 +18,7 @@ def lista_afiliados(request):
     q = request.GET.get("q", "")
     numero_afiliado = request.GET.get("numero_afiliado", "")
     sector = request.GET.get("sector", "")
+    localidad = request.GET.get("localidad", "")  # 🔹 nuevo
     ocultar_hechos = request.GET.get("ocultar_hechos", "")
 
     if q:
@@ -33,6 +34,9 @@ def lista_afiliados(request):
     if sector:
         afiliados = afiliados.filter(sector__icontains=sector)
 
+    if localidad:  # 🔹 nuevo
+        afiliados = afiliados.filter(localidad__icontains=localidad)
+
     if ocultar_hechos:
         afiliados = afiliados.filter(hecho=False)
 
@@ -43,7 +47,7 @@ def lista_afiliados(request):
         ws.title = "Afiliados"
 
         # encabezados
-        ws.append(["Nombre", "DNI", "Número Afiliado", "Zona", "Hecho"])
+        ws.append(["Nombre", "DNI", "Número Afiliado", "Zona", "Hecho", "Localidad"])  # 🔹 agregar Localidad
 
         # solo los registros filtrados
         for a in afiliados:
@@ -54,6 +58,7 @@ def lista_afiliados(request):
                     a.numero_afiliado,
                     a.sector,
                     "Sí" if a.hecho else "No",
+                    a.localidad,  # 🔹 agregar Localidad
                 ]
             )
 

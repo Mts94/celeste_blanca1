@@ -4,6 +4,7 @@ from django.core.management.utils import get_random_secret_key
 from decouple import config
 
 
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Clave secreta (usa la de Render si está definida, si no genera una local)

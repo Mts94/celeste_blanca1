@@ -24,32 +24,36 @@
     </div>
 
     <!-- 🔹 FORMULARIO DE BÚSQUEDA Y FILTROS -->
-    <form method="get" class="row mb-3">
+   <form method="get" class="row mb-3">
   <div class="col">
-    <input type="text" name="q" class="form-control" placeholder="Buscar por nombre o DNI" value="{{ filtros.q }}">
+    <input type="text" name="q" class="form-control" placeholder="Buscar por nombre o DNI" 
+           value="{{ request.GET.get('q','') }}">
   </div>
   <div class="col">
-    <input type="text" name="numero_afiliado" class="form-control" placeholder="Número Afiliado" value="{{ filtros.numero_afiliado }}">
+    <input type="text" name="numero_afiliado" class="form-control" placeholder="Número Afiliado" 
+           value="{{ request.GET.get('numero_afiliado','') }}">
   </div>
   <div class="col">
     <select name="sector" class="form-select">
         <option value="">Todos los sectores</option>
-        <option value="Norte" {% if sector_seleccionado == 'Norte' %}selected{% endif %}>Norte</option>
-        <option value="Sur" {% if sector_seleccionado == 'Sur' %}selected{% endif %}>Sur</option>
-        <option value="Este" {% if sector_seleccionado == 'Este' %}selected{% endif %}>Este</option>
-        <option value="Oeste" {% if sector_seleccionado == 'Oeste' %}selected{% endif %}>Oeste</option>
+        <option value="Norte" {% if request.GET.get('sector') == 'Norte' %}selected{% endif %}>Norte</option>
+        <option value="Sur" {% if request.GET.get('sector') == 'Sur' %}selected{% endif %}>Sur</option>
+        <option value="Este" {% if request.GET.get('sector') == 'Este' %}selected{% endif %}>Este</option>
+        <option value="Oeste" {% if request.GET.get('sector') == 'Oeste' %}selected{% endif %}>Oeste</option>
     </select>
-    <div>
-        <input type="text" name="localidad" class="form-control" placeholder="Localidad" value="{{ filtros.localidad }}">
-    </div>
-    <div class="form-check me-2">
-        <input class="form-check-input" type="checkbox" name="ocultar_hechos" value="1"
-               id="ocultar_hechos" {% if request.GET.ocultar_hechos %}checked{% endif %}>
-        <label class="form-check-label" for="ocultar_hechos">
-            Ocultar hechos
-        </label>
-    </div>
+  </div>
   <div class="col">
+    <input type="text" name="localidad" class="form-control" placeholder="Localidad" 
+           value="{{ request.GET.get('localidad','') }}">
+  </div>
+  <div class="col-auto form-check me-2">
+    <input class="form-check-input" type="checkbox" name="ocultar_hechos" value="1"
+           id="ocultar_hechos" {% if request.GET.get('ocultar_hechos') %}checked{% endif %}>
+    <label class="form-check-label" for="ocultar_hechos">
+        Ocultar hechos
+    </label>
+  </div>
+  <div class="col-auto">
     <button type="submit" class="btn btn-primary">Filtrar</button>
   </div>
 </form>
