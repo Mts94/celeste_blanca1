@@ -8,6 +8,7 @@ from django.db.models import Q
 import openpyxl
 from django.db import IntegrityError
 from django.contrib import messages
+from datetime import time
 
 
 @login_required
@@ -112,6 +113,23 @@ def upload_excel(request):
 
         for _, row in df.iterrows():
             try:
+                horario_valor = row.get("horario")
+
+                # Si viene como datetime o string, convertirlo a formato correcto
+                if pd.isna(horario_valor):
+                    horario_valor = None
+                elif isinstance(horario_valor, str):
+                    # Si ya es texto tipo "14:30:00"
+                    try:
+                        horario_valor = time.fromisoformat(horario_valor)
+                    except ValueError:
+                        horario_valor = None
+                elif hasattr(horario_valor, "time"):
+                    # Si es un datetime o Timestamp de pandas
+                    horario_valor = horario_valor.time()
+                else:
+                    horario_valor = None
+
                 Afiliado.objects.create(
                     dni=row.get("dni"),
                     apellido_nombre=row.get("apellido_nombre", ""),
@@ -120,18 +138,19 @@ def upload_excel(request):
                     localidad=row.get("localidad", ""),
                     telefono=row.get("telefono", ""),
                     direccion=row.get("direccion", ""),
-                    horario=row.get("horario"),
+                    horario=horario_valor,
                     observacion=row.get("observacion", ""),
                 )
+
             except IntegrityError:
                 messages.warning(
                     request, f"El DNI {row.get('dni')} ya existe y no fue cargado."
                 )
 
         messages.success(request, "Carga de Excel completada.")
-        return redirect("lista_afiliados")  # redirige a donde quieras
-    return render(request, "afiliados/upload_excel.html", {"form": UploadFileForm()})
+        return redirect("lista_afiliados")
 
+    return render(request, "afiliados/upload_excel.html", {"form": UploadFileForm()})
 
 @login_required
 def exportar_excel(request):
