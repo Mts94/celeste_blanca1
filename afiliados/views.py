@@ -117,7 +117,7 @@ def upload_excel(request):
                     apellido_nombre=row.get("apellido_nombre", ""),
                     sector=row.get("sector", ""),
                     numero_afiliado=row.get("numero_afiliado", ""),
-                    locaalidad=row.get("localidad", ""),
+                    localidad=row.get("localidad", ""),
                     telefono=row.get("telefono", ""),
                     direccion=row.get("direccion", ""),
                     horario=row.get("horario"),
